@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistics Background for Metabolomics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alex Sanchez-Pla" />
+    <meta name="date" content="2024-06-11" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="mycss.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistics Background for Metabolomics
+]
+.subtitle[
+## From data tables to biological insights
+]
+.author[
+### Alex Sanchez-Pla
+]
+.institute[
+### Genetics, Microbiology &amp; Statistics Department <br> Universitat de Barcelona
+]
+.date[
+### 2024-06-11
+]
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 22px;
+    padding: 1em 4em 1em 4em;
+}
+.left-code {
+  color: #777;
+  width: 38%;
+  height: 92%;
+  float: left;
+}
+.right-plot {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}
+&lt;/style&gt;
+
+
+
+
+# Outline
+
+.columnwide[
+  ### 1) [Introduction](#Introduction)
+  ### 2) [Data preprocessing](#DataPreprocessing)
+  ### 3) [Exploratory Analysis](#ExploratoryAnalysis)
+  ### 4) [Statistical tests](#StatisticalTests)
+  ### 5) [Unsupervised learning](#Unsupervised)
+  ### 5) [Supervised learning](#Supervised)
+  ### 7) [Summary and Conclusions](#Summary)
+  ### 6) [References and Resources](#Resources)
+]
+
+---
+
+class: inverse, middle, center
+
+name: Introduction
+
+# Introduction and motivation
+
+---
+
+# Where we come from
+
+&lt;div class="figure"&gt;
+&lt;img src="1-StatisticsBackground_insertimage_1.png" alt="From spectra and images to data tables" width="100%" /&gt;
+&lt;p class="caption"&gt;From spectra and images to data tables&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+# Where we are heading
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="1-StatisticsBackground_insertimage_2.png" alt="Making sense of the data with Statistical and Bioinformatical methods and tools" width="90%" /&gt;
+&lt;p class="caption"&gt;Making sense of the data with Statistical and Bioinformatical methods and tools&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+# Learning objectives
+
+- Familiarise with the *omics data analysis process*
+
+- Refresh Statistics backgrounders. 
+
+  - Emphasize relevant aspects of tests (p-values, multiple tests)
+
+- Learn about distinct approaches 
+  - Description/Modelling, 
+  - Univariate/Multivariate  
+  - Statistics/Machine Learning
+
+- Exploratory Unsupervised Statistical Methods 
+
+- Supervised Statistical and ML methods 
+
+
+---
+
+# The Omics Data Analysis Process
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="1-StatisticsBackground_insertimage_3.png" alt="Omics technologies may differ in their data generation processes as well in the questions they aim at answering. The general steps, however, show common traits among technologies" width="100%" /&gt;
+&lt;p class="caption"&gt;Omics technologies may differ in their data generation processes as well in the questions they aim at answering. The general steps, however, show common traits among technologies&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+# The Statistical Analysis Process
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="1-StatisticsBackground_insertimage_4.png" alt="Superimposed to the Omics Process there are a series of exploratory and modeling steps that, altogether, form the Statistical Analysis Process." width="90%" /&gt;
+&lt;p class="caption"&gt;Superimposed to the Omics Process there are a series of exploratory and modeling steps that, altogether, form the Statistical Analysis Process.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+# The Data for the Analysis
+
+- At the end of the data generation process we end up with similar types of data such as *Peak intensities, Concentrations*, usually organize in some type of rectangular  *features* `\(\times\)` *samples* tables.
+
+- These are, somehow, linked, to complementary information  (sample groups, metabolite names ...), generally kown as the study *metadata*.
+
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="1-StatisticsBackground_insertimage_6.png" alt="A possible organization of data and metadata using an Excel spreadsheet" width="60%" /&gt;
+&lt;p class="caption"&gt;A possible organization of data and metadata using an Excel spreadsheet&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+# Metadata organization
+
+- Typically *metadata* is intended to provide information on:
+  - Samples characteristics or experimental groups
+  - Variable names and other characteristics (e.g. is ametabolite *endogene* or *exogene*)
+  - Study characteristic such as the platform, technology or other data generation characteristics.
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="1-StatisticsBackground_insertimage_7.png" alt="Metadata can be provided as separate pieces of information" width="80%" /&gt;
+&lt;p class="caption"&gt;Metadata can be provided as separate pieces of information&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+# Metadata management
+
+- Some software libraries like [Bioconductor](http://bioconductor.org) provide specific  structures to allow the integrated management of data and metadata.
+- This is a powerful approach, but requires some level of expertise and is far from being universally adopted.
+
+&lt;img src="1-StatisticsBackground_insertimage_9.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Metadata integrated with data
+
+- Metadata can be combined with features values in the same file. 
+- This simplifies data management, but may have a poorer metadata
+
+&lt;img src="1-StatisticsBackground_insertimage_8.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Omics data structure
+
+- As with many other OMICS, Metabol*omics* data are high throughput, 
+- This, in practice, means often having more variables than samples.
+- It also imposes some restrictions to the analysis methods that can be used on the data.
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="1-StatisticsBackground_insertimage_5.png" alt="Traditional datasets (left) have more samples(K) than variables (N), while omics datasets (right) may have more features than samples `\(K&amp;gt;&amp;gt;N\)`" width="80%" /&gt;
+&lt;p class="caption"&gt;Traditional datasets (left) have more samples(K) than variables (N), while omics datasets (right) may have more features than samples `\(K&gt;&gt;N\)`&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+
+class: inverse, middle, center
+
+name: DataPreprocessing
+
+# Data pre-processing
+
+
+---
+
+# Data may not be that good
+
+- Omics data are high throughput which, in practice, means there is a huge number of values to deal with.
+
+- These values may be affected by the process that has generated them, which may have experienced unexpected issues.
+
+- Even if nothing went wrong there may be **noise**, some values may be **missing**, others may be unexpectedly big or small (**outliers**).
+
+---
+
+# Quality control and preprocessing
+
+.pull-left[
+
+- The data usually undergo a series of iterative steps where they are 
+  - checked, 
+  - eventually adjusted to correct some detcted problem and
+  - re-checked to find out if the problem has been corrected.
+]
+
+.pull-right[
+
+&lt;img src="1-StatisticsBackground_insertimage_11.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+- Here we don't go into pre-processing details, because they are discussed elsewhere.
+
+- We only consider them in what they may affect statistical analysis.
+
+---
+
+# Missing values (MV)
+
+.pull-left[
+
+- Due to either signal truncation, failures in peak detection or true missings.
+
+- Cn lead to biased results, reduced statistical power, and invalid conclusions.
+
+- MV are usually imputed as mean/mode imputation, k-nearest neighbors, or multiple imputation techniques.
+
+- Failure to address can distort parameter estimates and increase type I/II errors. 
+]
+
+.pull-right[
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="1-StatisticsBackground_insertimage_13.png" alt="Source: https://doi.org/10.1007/s11306-011-0366-4" width="100%" /&gt;
+&lt;p class="caption"&gt;Source: https://doi.org/10.1007/s11306-011-0366-4&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+# Outlier Detection (OD)
+
+.pull-left[
+
+- Extreme values that don't seem to fit with the data
+- Can skew results, affect mean/variance, and lead to misleading inferences.
+- Detection through variability measures in normal or reduced dimensions.
+- Treatment: remove, adjust, or analyze separately.
+-  Ignoring outliers can result in inflated errors and biased parameter estimates.
+]
+
+.pull-right[
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="1-StatisticsBackground_insertimage_14.png" alt="Univariate vs bivariate outlier detection" width="100%" /&gt;
+&lt;p class="caption"&gt;Univariate vs bivariate outlier detection&lt;/p&gt;
+&lt;/div&gt;
+]
+
+
+---
+
+# Sample Normalization (SN)
+
+.pull-left[
+
+- Variation in data acquisition can introduce systematic biases, affecting comparability across samples.
+
+- Normalization aim at making samples comparable while keeping the ability to detect eventual differences
+
+- Many methods exist from simple median normalization to many elaborate approaches.
+
+]
+
+.pull-right[
+&lt;br&gt;
+
+&lt;img src="1-StatisticsBackground_insertimage_16.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Source: [Data normalization strategies in metabolomics](https://doi.org/10.1177/1469066720918446)
+]
+
+---
+
+# Evaluate normalization effects
+
+.pull-left[
+
+- How can we know that normalization has produced the expected effect?
+
+- Distinct criteria may lead to distinct choices but
+
+- It is always a good idea to try to evaluate how well does any preprocessing method.
+
+]
+
+.pull-right[
+
+&lt;img src="1-StatisticsBackground_insertimage_23.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Source: [NOREVA: normalization and evaluation of MS-based metabolomics data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5570188/)
+]
+
+---
+
+
+# Data Transformations
+
+.pull-left[
+
+- Data may be skewed and/or heteroscedastic, violating certain test assumptions.
+
+- Normalizing transformations (log, sqrt, etc.) may stabilize variance and approach normality.
+
+- Proper transformation ensures that statistical assumptions are met, enhancing the validity of inferential statistics.
+
+]
+
+.pull-right[
+&lt;br&gt;
+
+&lt;img src="1-StatisticsBackground_insertimage_17.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Source: [Adaptive Box–Cox Transformation ... for Better Statistical Analysis](https://pubs.acs.org/doi/pdf/10.1021/acs.analchem.2c00503)
+]
+
+---
+
+# Scaling
+
+.pull-left[
+
+- Data with different ranges and units, cause high-variance metabolites to dominate multivariate analyses.
+
+- Solved by scaling  the data using standardization (z-score) or unit variance scaling.
+
+- Without scaling, statistical methods like PCA or clustering may be biased towards high-variance features, misrepresenting the true data structure. 
+]
+
+.pull-right[
+
+&lt;img src="1-StatisticsBackground_insertimage_19.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Source: [ Centering, scaling, and transformations: improving the biological information content of metabolomics data](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-7-142/tables/1)
+]
+
+---
+
+# Centering, Scaling, Transformations
+
+&lt;img src="1-StatisticsBackground_insertimage_20.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Source: [ Centering, scaling, and transformations: improving the biological information content of metabolomics data](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-7-142/tables/1)
+]
+
+---
+
+# In practice ... (MetaboAnalyst)
+
+&lt;img src="1-StatisticsBackground_insertimage_21.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Preprocessing in summary
+
+.pull-left[
+
+- The output of preprocessing steps is a cleaner, more homogeneous dataset.
+
+- This does not necessarily mean this is a better dataset!
+
+- Steps should not be taken blindly, but carefully
+  - Their need and their effect must be assessed.
+  - When in doubt, leave things unchanged.
+  - Or ask your favourite bioinformatician.
+]
+
+.pull-right[
+
+&lt;img src="1-StatisticsBackground_insertimage_22.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+Source: [Metabolomics Data Normalization with EigenMS](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0116221)
+]
+
+---
+
+class: inverse, middle, center
+
+name: ExploratoryAnalysis
+
+# Exploratory Analysis
+
+---
+
+# Exploratory Data Analysis (EDA)
+
+.pull-left[
+
+- It refers to any calculation or figure that provides information about a dataset.
+
+- The first thing (sometimes the only thing) to do in a Data Analysis.
+
+- It impregnates every step in the omics data analysis process
+  - Quality checks
+  - Data exploration
+  - Statistical test (check asumptions, visualize results)
+  - Statistical modeling (check assumptions, visualize model fit)
+
+]
+
+.pull-right[
+
+&lt;img src="1-StatisticsBackground_insertimage_24.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+---
+
+# Univariate vs Multivariate EDA
+
+.pull-left[
+
+- Omics data are high dimensional (multivariate): 1 dimension/feature.
+
+- Features are related to each other.
+
+- This leads to consider multivariate statistics as the natural way to try to understand data structure
+  - The relation between features.
+  - The similarity between individuals.
+
+- This is may be complex and not necessarily informative.
+  - It is usually complemented by uni and bi-variate exploration
+]
+
+.pull-right[
+
+]
+
+---
+
+# Initial Data Examination
+
+.pull-left[
+- Start any statistical analysis by looking at the data
+
+  - [Which/How many/What type of] variables, 
+
+  - [Which/How many] samples
+  
+  - Are there some/many missing values?
+  
+- Obtain simple summary statistics and plots
+
+-  Visualize the data, try to get a grasp of variables and individuals
+
+]
+.pull-right[
+
+&lt;img src="1-StatisticsBackground_insertimage_25.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Numerical summaries
+
+- If the number of features is not huge, they provide useful information
+
+- Location estimates: Mean, Median, Mode, quantils
+
+- Dispersion estimates: Variance, Standard deviation, interquartile range
+
+- For relation between variables we can estimate the covariance between two variables qhich measures their degree of linear association.
+- Covariance depends on the units of the variables. 
+  - Use the correlation coefficent to have a unitless scale.
+  - Always consider Pearson and Spearman (Ranks) coefficient.
+  
+- Other measures are also useful, but less used
+  - E.g. Skewness is a measure of the simmetry of the variable. Values outside [-1, +1] suggest skewed distributions.
+  
+---
+
+# A toy dataset
+
+&lt;img src="1-StatisticsBackground_insertimage_28.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Numerical summaries
+  
+&lt;img src="1-StatisticsBackground_insertimage_32.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Don't confuse features with observations!
+
+
+- In classical statistics we always think of summarizing or plotting variables.
+- In omics data it is common to summarize/plot samples
+  - It can be done, it may be useful
+  - But it does not mean the same.
+
+
+
+- The lines below show the mean an sd of each sample
+
+- The columns on the right show the mean an sd of each variable.
+
+- They are different. They don't mean the same!
+
+&lt;img src="1-StatisticsBackground_insertimage_29.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# The *king* of graphical summaries
+
+- Boxplots provide a condensed representation of a distribution, based on quartiles and outliers.
+
+- Being a flat representation, it facilitates comparisons.
+
+&lt;img src="1-StatisticsBackground_insertimage_31.png" width="100%" style="display: block; margin: auto;" /&gt;
+---
+
+# Again, they are not the same!
+
+&lt;img src="1-StatisticsBackground_insertimage_30.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# From uni/bivariate to multivariate EDA
+
+- Omics data are high dimensional
+- Because of this, it makes full sense to try to look *at all variables at once*
+- Although possible in moderate settings it is generally very difficult to extract useful information.
+- An alternative is to rely on dimension reduction methods, that retain some/most information and project it to lower dimensional spaces where this can be visualized,
+
+- For this we will go through a series of Multivariate Exploratory (Unsupervised) techniques.
+
+![Plot title. ](1-StatisticsBackground_insertimage_33.png)
+
+---
+
+class: inverse, middle, center
+
+name: Resources
+  
+# References and Resources
+
+---
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

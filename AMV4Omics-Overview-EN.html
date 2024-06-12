@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Multivariate Exploration of Omics Data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alex Sanchez-Pla" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="mycss.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Multivariate Exploration of Omics Data
+]
+.subtitle[
+## Descriptive, PCA, and Clustering
+]
+.author[
+### Alex Sanchez-Pla
+]
+.institute[
+### Department of Genetics, Microbiology, and Statistics <br> University of Barcelona
+]
+.date[
+### Version 2024-06-12
+]
+
+---
+
+
+
+
+
+
+# Outline
+
+.columnwide[
+  ## 1) [Introduction and Motivation](#Introduction)
+  ## 2) [Exploration of Multivariate Data](#Descriptive)
+  ## 3) [Dimension Reduction](#Factorizations)
+  ## 4) [Discovering Groups in Data](#Clustering)
+  ## 5) [References and Resources](#References)
+]  
+
+---
+
+class: inverse, middle, center
+
+name: Introduction
+
+# Introduction and Motivation
+
+---
+
+# The Right Approach for Omics?
+
+.pull-left[
+
+-   Classical Statistics
+
+    -   Multiple regression
+
+    -   Discriminant analysis
+
+    -   ANOVA
+
+-   Data tables are *long* and *not very wide ("more individuals than variables")*
+]
+.pull-right[
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_2.png)
+]
+
+---
+
+# The Nature of Omics Data
+
+.pull-left[
+
+-   Omics data have a different structure than usual in multivariate statistics.
+
+-   They measure different characteristics
+
+  -  GC/MS spectra, Expression, Concentration...
+
+-   Though they have common aspects
+
+-   Most of them are high throughput
+
+]
+.pull-right[
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_1.png)
+
+
+  -   Many variables (**K**) measured simultaneously
+
+  -   Few samples (**N**) analyzed
+]
+
+---
+
+# A (More) Suitable Approach
+
+.pull-left[
+
+- With omics data, it is common to apply methods known as *projection* or *dimension reduction* methods
+
+- They offer interesting advantages
+  - Examine ALL variables together
+  - Avoid loss of information
+  - Find underlying trends = "latent variables"
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_3.png)
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_4.png)
+]
+
+---
+
+# What is a Projection?
+
+.pull-left[
+
+-   Variables = axes in a multidimensional space
+
+-   Observations = points in the multidimensional space
+
+-   Projecting points onto (hyper)planes *can make it possible*
+
+    -   Simplify/Improve visualization
+
+    -   Highlight inherent or natural groupings in the data
+
+    -   Emphasize the relationship between these groups.
+
+    -   Detect issues such as batch effects or outliers
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_5.png)
+[Data Science post: What is dimensionality reduction](https://datascience.stackexchange.com/questions/130/what-is-dimensionality-reduction-what-is-the-difference-between-feature-selecti)
+]
+
+---
+
+# Geometric and Algebraic Approach
+
+.pull-left[
+
+-   Projections can always be considered from an algebraic or geometric viewpoint
+
+    - Algebraically: The information of the observations is summarized in some new (latent) variables
+
+    - Geometrically: The set of points in a K-dimensional space (K = number of variables) is *approximated* by a (hyper)plane, a space of lower dimension where the points are projected.
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_7.png)
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_6.png)
+]
+
+---
+
+# Organization of Contents 
+
+- Initial exploratory analysis
+
+  -   Description and possible transformations
+
+-   Projection/dimension reduction or matrix decomposition methods.
+    -   We will focus on Principal Component Analysis (PCA), but mention other approaches
+
+-   Pattern or class discovery methods
+
+    -   Cluster analysis and agglomerative methods (KMeans/PAM)
+
+---
+
+class: inverse, middle, center
+
+name: Descriptive
+
+# Exploration of Multivariate Data
+
+---
+
+# I. Data Description
+
+.pull-left[
+
+-   We will start any statistical analysis by observing the data
+  -   Which/How many variables,
+  -   Which/How many samples
+  -   Are there missing values?
+  -   Obtain simple summary statistics and graphs
+
+- We can calculate usual descriptive statistics, starting with univariate measures and progressing to bivariate or multivariate statistics
+]
+
+.pull-right[
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_8.png)
+
+]
+
+---
+
+# Univariate Numerical Summaries
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_9.png)
+[Source: Multivariate Data Analysis Course. Carlos O. Sanchez](http://i2pc.es/coss/Docencia/ADAM/Notes/MultivariateAnalysisSlides.pdf)
+
+---
+
+# Bivariate Numerical Summaries
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_10.png)
+[Source: Multivariate Data Analysis Course. Carlos O. Sanchez](http://i2pc.es/coss/Docencia/ADAM/Notes/MultivariateAnalysisSlides.pdf)
+
+---
+
+#   Multivariate Distances (1)
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_11.png)
+[Source: Multivariate Data Analysis Course. Carlos O. Sanchez](http://i2pc.es/coss/Docencia/ADAM/Notes/MultivariateAnalysisSlides.pdf)
+
+---
+
+#   Multivariate Distances (2)
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_12.png)
+[Source: Multivariate Data Analysis Course. Carlos O. Sanchez](http://i2pc.es/coss/Docencia/ADAM/Notes/MultivariateAnalysisSlides.pdf)
+
+---
+
+#   Bivariate Dependence
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_13.png)
+[Source: Multivariate Data Analysis Course. Carlos O. Sanchez](http://i2pc.es/coss/Docencia/ADAM/Notes/MultivariateAnalysisSlides.pdf)
+
+---
+
+#   Multivariate Dependence
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_14.png)
+[Source: Multivariate Data Analysis Course. Carlos O. Sanchez](http://i2pc.es/coss/Docencia/ADAM/Notes/MultivariateAnalysisSlides.pdf)
+
+---
+
+#  Data Visualization
+
+.pull-left[
+
+-   It is possible to visualize the variables one by one
+
+    -   Histogram, Boxplots, Violin plots, bar charts
+
+-   But usually start with 2D or 3D graphs
+
+    -   Multiple boxplot, Scatterplots, Mosaicplots
+
+    -   Heatmaps are very popular
+]
+
+.pull-right[
+
+&lt;img src="images/AMV4Omics-Xaringan_insertimage_15.png" width="1500" height="200"/&gt;
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_16.png)
+]
+
+---
+
+#  Visualizing Multiple Variables
+
+- To work with three or more variables, there are different alternatives
+
+  -   Obviously, one is to start with the above and represent the variables ignoring their relationship or studying them in pairs
+
+  -   Another alternative is to work in reduced dimensions, i.e., represent, for example, 2 by 2 or 3 by 3 some of the first components.
+  
+- This is the approach discussed in the next section, dedicated to dimension reduction.
+
+---
+
+#  Data Exploration Example
+
+.pull-left[
+
+- This link [(Link to workflow)](https://bioconductor.org/packages/release/bioc/vignettes/POMA/inst/doc/POMA-demo.html) contains a complete workflow of metabolomics data using the POMA package from Bioconductor.
+  -   The first steps show aspects such as data exploration, transformations, and detection and imputation of missing values.
+
+  - Note the use of `SummarizedExperiment`, a generalization of the ExpressionSet class, originally designed for microarrays.
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_17.png)
+]
+
+---
+
+class: inverse, middle, center
+
+name: Factorizations
+
+# Dimension Reduction
+
+---
+
+# Principal Component Analysis
+
+.pull-left[
+
+-   Given a ***KxN data matrix*** containing ***K*** variables (probably correlated measurements) in ***N*** samples (objects/individuals...)
+
+-   PCA transforms the variables into ***K*** new components that
+
+  -   Reflect the different sources of variability in the data, but
+
+  -   are not correlated, i.e., *each component represents a different source of variability,*
+]
+
+.pull-right[
+
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_20.png)
+
+[Source](https://towardsdatascience.com/tidying-up-with-pca-an-introduction-to-principal-components-analysis-f876599af383)
+]
+
+---
+
+# Designed to Improve
+
+.pull-left[
+
+-   These new components are constructed in such a way that *they have decreasing explanatory power*: each component explains more than the next (less
+
+) variability in the data.
+
+-  Practically, in most cases, a few components (two, three, etc.) are enough to summarize the majority of the information contained in the original variables.
+
+-  The principal components are calculated by projecting the points onto a reduced number of axes, thus forming a plane or a hyperplane that minimizes the Euclidean distance between the points and their projections.
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_21.png)
+
+]
+
+---
+
+#   PCA: What do we get?
+
+.pull-left[
+
+-   The output of a PCA analysis includes
+
+  -   A summary of the variability explained by each of the principal components and a plot (scree plot) that shows how it decreases with the component number.
+
+  -   Scores: New coordinates of samples on the PC axes
+
+  -   Loadings: Coordinates of variables on the PC axes
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_22.png)
+]
+  
+---
+
+# PCA in Action
+
+.pull-left[
+
+-   Classical example: Iris data
+  -   First two principal components (from the four original variables) can separate three species
+
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_23.png)
+[Link to code](https://gist.github.com/chriddyp/7c6c43682a8f57a1f999)
+]
+
+---
+
+#  Dimension Reduction Example
+
+- This link [(Link to workflow)](https://bioconductor.org/packages/release/bioc/vignettes/POMA/inst/doc/POMA-demo.html) contains a complete workflow of metabolomics data using the POMA package from Bioconductor.
+
+- The second steps show aspects such as data transformation and projection using PCA.
+
+---
+
+class: inverse, middle, center
+
+name: Clustering
+
+# Discovering Groups in Data
+
+---
+
+# Clustering
+
+.pull-left[
+
+-   Clustering techniques allow for the identification of patterns and structures in data.
+
+  -   **K-means** and **PAM (Partitioning Around Medoids)** are two commonly used clustering techniques.
+
+  -   These methods partition data points into a set number of clusters based on their similarity.
+
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_24.png)
+[Image: Clustering Visualization](https://rpubs.com/Fagbokforlaget/526362)
+]
+
+---
+
+# Agglomerative Methods
+
+.pull-left[
+
+- **Hierarchical clustering** is an agglomerative method that builds nested clusters by merging or splitting them successively.
+
+  - It creates a tree-like structure called a dendrogram, which can be cut at different levels to obtain varying cluster numbers.
+  
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_25.png)
+[Image: Hierarchical Clustering](https://se.mathworks.com/discovery/hierarchical-clustering.html)
+]
+
+---
+
+# Heatmaps for Clustering
+
+.pull-left[
+
+- Heatmaps are a useful way to visualize clusters of variables and samples simultaneously.
+
+  - Colors represent values of data points, with clustering applied to both rows and columns.
+
+]
+
+.pull-right[
+![Plot title. ](images/AMV4Omics-Xaringan_insertimage_26.png)
+]
+
+---
+
+# Clustering in Action
+
+- This link [(Link to workflow)](https://bioconductor.org/packages/release/bioc/vignettes/POMA/inst/doc/POMA-demo.html) contains a complete workflow of metabolomics data using the POMA package from Bioconductor.
+
+- The final steps show aspects such as clustering and visualization using heatmaps.
+
+---
+
+class: inverse, middle, center
+
+name: References
+
+# References and Resources
+
+---
+
+# References and Resources
+
+- Multivariate Data Analysis Course. Carlos O. Sanchez
+  [Course Slides](http://i2pc.es/coss/Docencia/ADAM/Notes/MultivariateAnalysisSlides.pdf)
+
+- POMA Package for Metabolomics
+  [POMA Vignette](https://bioconductor.org/packages/release/bioc/vignettes/POMA/inst/doc/POMA-demo.html)
+  
+- Principal Component Analysis Overview
+  [PCA Overview](https://towardsdatascience.com/tidying-up-with-pca-an-introduction-to-principal-components-analysis-f876599af383)
+
+- Hierarchical Clustering
+  [Hierarchical Clustering Overview](https://se.mathworks.com/discovery/hierarchical-clustering.html)
+
+- Iris Data PCA
+  [Iris Data PCA Code](https://gist.github.com/chriddyp/7c6c43682a8f57a1f999)
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

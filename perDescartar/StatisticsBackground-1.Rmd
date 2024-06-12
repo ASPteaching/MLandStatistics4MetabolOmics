@@ -1,0 +1,587 @@
+---
+title: 'Statistics Background for Metabolomics'
+subtitle: 'From data tables to biological insights'
+author: Alex Sanchez-Pla
+institute: "Genetics, Microbiology & Statistics Department <br> Universitat de Barcelona"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, "mycss.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 22px;
+    padding: 1em 4em 1em 4em;
+}
+.left-code {
+  color: #777;
+  width: 38%;
+  height: 92%;
+  float: left;
+}
+.right-plot {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}
+</style>
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo=FALSE,
+        message=FALSE,warning=FALSE,
+        fig.dim=c(4.8, 4.5), fig.retina=2, out.width="100%")
+
+knitr::opts_chunk$set(echo = FALSE)
+
+knitr::knit_hooks$set(mysize = function(before, options, envir) {
+  if (before) 
+    return(options$size)
+})
+```
+
+
+# Outline
+
+.columnwide[
+  ### 1) [Introduction](#Introduction)
+  ### 2) [Data preprocessing](#DataPreprocessing)
+  ### 3) [Exploratory Analysis](#ExploratoryAnalysis)
+  ### 4) [Statistical tests](#StatisticalTests)
+  ### 5) [Unsupervised learning](#Unsupervised)
+  ### 5) [Supervised learning](#Supervised)
+  ### 7) [Summary and Conclusions](#Summary)
+  ### 6) [References and Resources](#Resources)
+]
+
+---
+
+class: inverse, middle, center
+
+name: Introduction
+
+# Introduction and motivation
+
+---
+
+# Where we come from
+
+```{r out.width="100%", fig.cap='From spectra and images to data tables'}
+knitr::include_graphics("1-StatisticsBackground_insertimage_1.png")
+```
+
+---
+
+# Where we are heading
+
+```{r out.width="90%", fig.align='center', fig.cap='Making sense of the data with Statistical and Bioinformatical methods and tools'}
+knitr::include_graphics("1-StatisticsBackground_insertimage_2.png")
+```
+
+---
+
+# Learning objectives
+
+- Familiarise with the *omics data analysis process*
+
+- Refresh Statistics backgrounders. 
+
+  - Emphasize relevant aspects of tests (p-values, multiple tests)
+
+- Learn about distinct approaches 
+  - Description/Modelling, 
+  - Univariate/Multivariate  
+  - Statistics/Machine Learning
+
+- Exploratory Unsupervised Statistical Methods 
+
+- Supervised Statistical and ML methods 
+
+
+---
+
+# The Omics Data Analysis Process
+
+```{r out.width="100%", fig.align='center', fig.cap='Omics technologies may differ in their data generation processes as well in the questions they aim at answering. The general steps, however, show common traits among technologies'}
+knitr::include_graphics("1-StatisticsBackground_insertimage_3.png")
+```
+
+---
+
+# The Statistical Analysis Process
+
+```{r out.width="90%", fig.align='center', fig.cap='Superimposed to the Omics Process there are a series of exploratory and modeling steps that, altogether, form the Statistical Analysis Process.'}
+knitr::include_graphics("1-StatisticsBackground_insertimage_4.png")
+```
+
+---
+
+# The Data for the Analysis
+
+- At the end of the data generation process we end up with similar types of data such as *Peak intensities, Concentrations*, usually organize in some type of rectangular  *features* $\times$ *samples* tables.
+
+- These are, somehow, linked, to complementary information  (sample groups, metabolite names ...), generally kown as the study *metadata*.
+
+
+```{r out.width="60%", fig.align='center', fig.cap='A possible organization of data and metadata using an Excel spreadsheet'}
+knitr::include_graphics("1-StatisticsBackground_insertimage_6.png")
+```
+
+---
+
+# Metadata organization
+
+- Typically *metadata* is intended to provide information on:
+  - Samples characteristics or experimental groups
+  - Variable names and other characteristics (e.g. is ametabolite *endogene* or *exogene*)
+  - Study characteristic such as the platform, technology or other data generation characteristics.
+
+```{r out.width="80%", fig.align='center', fig.cap='Metadata can be provided as separate pieces of information'}
+knitr::include_graphics("1-StatisticsBackground_insertimage_7.png")
+```
+
+---
+
+# Metadata management
+
+- Some software libraries like [Bioconductor](http://bioconductor.org) provide specific  structures to allow the integrated management of data and metadata.
+- This is a powerful approach, but requires some level of expertise and is far from being universally adopted.
+
+```{r out.width="60%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_9.png")
+```
+
+---
+
+# Metadata integrated with data
+
+- Metadata can be combined with features values in the same file. 
+- This simplifies data management, but may have a poorer metadata
+
+```{r out.width="100%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_8.png")
+```
+
+---
+
+# Omics data structure
+
+- As with many other OMICS, Metabol*omics* data are high throughput, 
+- This, in practice, means often having more variables than samples.
+- It also imposes some restrictions to the analysis methods that can be used on the data.
+
+```{r out.width="80%", fig.align='center', fig.cap='Traditional datasets (left) have more samples(K) than variables (N), while omics datasets (right) may have more features than samples $K>>N$'}
+knitr::include_graphics("1-StatisticsBackground_insertimage_5.png")
+```
+
+---
+
+
+class: inverse, middle, center
+
+name: DataPreprocessing
+
+# Data pre-processing
+
+
+---
+
+# Data may not be that good
+
+- Omics data are high throughput which, in practice, means there is a huge number of values to deal with.
+
+- These values may be affected by the process that has generated them, which may have experienced unexpected issues.
+
+- Even if nothing went wrong there may be **noise**, some values may be **missing**, others may be unexpectedly big or small (**outliers**).
+
+---
+
+# Quality control and preprocessing
+
+.pull-left[
+
+- The data usually undergo a series of iterative steps where they are 
+  - checked, 
+  - eventually adjusted to correct some detcted problem and
+  - re-checked to find out if the problem has been corrected.
+]
+
+.pull-right[
+
+```{r out.width="100%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_11.png")
+```
+]
+
+- Here we don't go into pre-processing details, because they are discussed elsewhere.
+
+- We only consider them in what they may affect statistical analysis.
+
+---
+
+# Missing values (MV)
+
+.pull-left[
+
+- Due to either signal truncation, failures in peak detection or true missings.
+
+- Cn lead to biased results, reduced statistical power, and invalid conclusions.
+
+- MV are usually imputed as mean/mode imputation, k-nearest neighbors, or multiple imputation techniques.
+
+- Failure to address can distort parameter estimates and increase type I/II errors. 
+]
+
+.pull-right[
+
+```{r out.width="100%", fig.align='center', fig.cap='Source: https://doi.org/10.1007/s11306-011-0366-4'}
+knitr::include_graphics("1-StatisticsBackground_insertimage_13.png")
+```
+]
+
+---
+
+# Outlier Detection (OD)
+
+.pull-left[
+
+- Extreme values that don't seem to fit with the data
+- Can skew results, affect mean/variance, and lead to misleading inferences.
+- Detection through variability measures in normal or reduced dimensions.
+- Treatment: remove, adjust, or analyze separately.
+-  Ignoring outliers can result in inflated errors and biased parameter estimates.
+]
+
+.pull-right[
+
+```{r out.width="100%", fig.align='center', fig.cap='Univariate vs bivariate outlier detection'}
+knitr::include_graphics("1-StatisticsBackground_insertimage_14.png")
+```
+]
+
+
+---
+
+# Sample Normalization (SN)
+
+.pull-left[
+
+- Variation in data acquisition can introduce systematic biases, affecting comparability across samples.
+
+- Normalization aim at making samples comparable while keeping the ability to detect eventual differences
+
+- Many methods exist from simple median normalization to many elaborate approaches.
+
+]
+
+.pull-right[
+<br>
+
+```{r out.width="100%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_16.png")
+```
+
+Source: [Data normalization strategies in metabolomics](https://doi.org/10.1177/1469066720918446)
+]
+
+---
+
+# Evaluate normalization effects
+
+.pull-left[
+
+- How can we know that normalization has produced the expected effect?
+
+- Distinct criteria may lead to distinct choices but
+
+- It is always a good idea to try to evaluate how well does any preprocessing method.
+
+]
+
+.pull-right[
+
+```{r out.width="100%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_23.png")
+```
+
+Source: [NOREVA: normalization and evaluation of MS-based metabolomics data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5570188/)
+]
+
+---
+
+
+# Data Transformations
+
+.pull-left[
+
+- Data may be skewed and/or heteroscedastic, violating certain test assumptions.
+
+- Normalizing transformations (log, sqrt, etc.) may stabilize variance and approach normality.
+
+- Proper transformation ensures that statistical assumptions are met, enhancing the validity of inferential statistics.
+
+]
+
+.pull-right[
+<br>
+
+```{r out.width="100%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_17.png")
+```
+
+Source: [Adaptive Box–Cox Transformation ... for Better Statistical Analysis](https://pubs.acs.org/doi/pdf/10.1021/acs.analchem.2c00503)
+]
+
+---
+
+# Scaling
+
+.pull-left[
+
+- Data with different ranges and units, cause high-variance metabolites to dominate multivariate analyses.
+
+- Solved by scaling  the data using standardization (z-score) or unit variance scaling.
+
+- Without scaling, statistical methods like PCA or clustering may be biased towards high-variance features, misrepresenting the true data structure. 
+]
+
+.pull-right[
+
+```{r out.width="100%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_19.png")
+```
+
+Source: [ Centering, scaling, and transformations: improving the biological information content of metabolomics data](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-7-142/tables/1)
+]
+
+---
+
+# Centering, Scaling, Transformations
+
+```{r out.width="100%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_20.png")
+```
+
+Source: [ Centering, scaling, and transformations: improving the biological information content of metabolomics data](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-7-142/tables/1)
+]
+
+---
+
+# In practice ... (MetaboAnalyst)
+
+```{r out.width="60%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_21.png")
+```
+
+---
+
+# Preprocessing in summary
+
+.pull-left[
+
+- The output of preprocessing steps is a cleaner, more homogeneous dataset.
+
+- This does not necessarily mean this is a better dataset!
+
+- Steps should not be taken blindly, but carefully
+  - Their need and their effect must be assessed.
+  - When in doubt, leave things unchanged.
+  - Or ask your favourite bioinformatician.
+]
+
+.pull-right[
+
+```{r out.width="80%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_22.png")
+```
+
+Source: [Metabolomics Data Normalization with EigenMS](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0116221)
+]
+
+---
+
+class: inverse, middle, center
+
+name: ExploratoryAnalysis
+
+# Exploratory Analysis
+
+---
+
+# Exploratory Data Analysis (EDA)
+
+.pull-left[
+
+- It refers to any calculation or figure that provides information about a dataset.
+
+- The first thing (sometimes the only thing) to do in a Data Analysis.
+
+- It impregnates every step in the omics data analysis process
+  - Quality checks
+  - Data exploration
+  - Statistical test (check asumptions, visualize results)
+  - Statistical modeling (check assumptions, visualize model fit)
+
+]
+
+.pull-right[
+
+```{r out.width="80%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_24.png")
+```
+]
+---
+
+# Univariate vs Multivariate EDA
+
+.pull-left[
+
+- Omics data are high dimensional (multivariate): 1 dimension/feature.
+
+- Features are related to each other.
+
+- This leads to consider multivariate statistics as the natural way to try to understand data structure
+  - The relation between features.
+  - The similarity between individuals.
+
+- This is may be complex and not necessarily informative.
+  - It is usually complemented by uni and bi-variate exploration
+]
+
+.pull-right[
+
+]
+
+---
+
+# Initial Data Examination
+
+.pull-left[
+- Start any statistical analysis by looking at the data
+
+  - [Which/How many/What type of] variables, 
+
+  - [Which/How many] samples
+  
+  - Are there some/many missing values?
+  
+- Obtain simple summary statistics and plots
+
+-  Visualize the data, try to get a grasp of variables and individuals
+
+]
+.pull-right[
+
+```{r out.width="60%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_25.png")
+```
+
+]
+
+---
+
+# Numerical summaries
+
+- If the number of features is not huge, they provide useful information
+
+- Location estimates: Mean, Median, Mode, quantils
+
+- Dispersion estimates: Variance, Standard deviation, interquartile range
+
+- For relation between variables we can estimate the covariance between two variables qhich measures their degree of linear association.
+- Covariance depends on the units of the variables. 
+  - Use the correlation coefficent to have a unitless scale.
+  - Always consider Pearson and Spearman (Ranks) coefficient.
+  
+- Other measures are also useful, but less used
+  - E.g. Skewness is a measure of the simmetry of the variable. Values outside [-1, +1] suggest skewed distributions.
+  
+---
+
+# A toy dataset
+
+```{r out.width="90%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_28.png")
+```
+
+---
+
+# Numerical summaries
+  
+```{r out.width="60%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_32.png")
+```
+
+
+---
+
+# Don't confuse features with observations!
+
+
+- In classical statistics we always think of summarizing or plotting variables.
+- In omics data it is common to summarize/plot samples
+  - It can be done, it may be useful
+  - But it does not mean the same.
+
+
+
+- The lines below show the mean an sd of each sample
+
+- The columns on the right show the mean an sd of each variable.
+
+- They are different. They don't mean the same!
+
+```{r out.width="90%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_29.png")
+```
+
+---
+
+# The *king* of graphical summaries
+
+- Boxplots provide a condensed representation of a distribution, based on quartiles and outliers.
+
+- Being a flat representation, it facilitates comparisons.
+
+```{r out.width="100%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_31.png")
+```
+---
+
+# Again, they are not the same!
+
+```{r out.width="90%", fig.align='center', fig.cap=''}
+knitr::include_graphics("1-StatisticsBackground_insertimage_30.png")
+```
+
+---
+
+# From uni/bivariate to multivariate EDA
+
+- Omics data are high dimensional
+- Because of this, it makes full sense to try to look *at all variables at once*
+- Although possible in moderate settings it is generally very difficult to extract useful information.
+- An alternative is to rely on dimension reduction methods, that retain some/most information and project it to lower dimensional spaces where this can be visualized,
+
+- For this we will go through a series of Multivariate Exploratory (Unsupervised) techniques.
+
+![Plot title. ](1-StatisticsBackground_insertimage_33.png)
+
+---
+
+class: inverse, middle, center
+
+name: Resources
+  
+# References and Resources
+
+---
+
