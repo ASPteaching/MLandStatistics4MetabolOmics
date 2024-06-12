@@ -178,7 +178,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_8.png")
 - This, in practice, means often having more variables than samples.
 - It also imposes some restrictions to the analysis methods that can be used on the data.
 
-```{r out.width="70%", fig.align='center', fig.cap='Traditional datasets (left) have more samples(K) than variables (N), while omics datasets (right) may have more features than samples $K>>N$'}
+```{r out.width="70%", fig.align='center', fig.cap='Traditional datasets (left) have more samples (K) than variables (N), while omics datasets (right) may have more features than samples (K >> N)'}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_5.png")
 ```
 
@@ -212,18 +212,21 @@ name: DataPreprocessing
   - checked, 
   - eventually adjusted to correct some detcted problem and
   - re-checked to find out if the problem has been corrected.
+
+
+- Here we don't go into pre-processing details, because they are discussed elsewhere.
+- We only consider them in what they may affect statistical analysis.
+
 ]
 
 .pull-right[
 
 ```{r out.width="100%", fig.align='center', fig.cap=''}
-knitr::include_graphics("images/1-StatisticsBackground_insertimage_11.png")
+# knitr::include_graphics("images/1-StatisticsBackground_insertimage_11.png")
+knitr::include_graphics("images/preprocessing_scheme.png")
 ```
 ]
 
-- Here we don't go into pre-processing details, because they are discussed elsewhere.
-
-- We only consider them in what they may affect statistical analysis.
 
 ---
 
@@ -233,7 +236,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_11.png")
 
 - Due to either signal truncation, failures in peak detection or true missings.
 
-- Cn lead to biased results, reduced statistical power, and invalid conclusions.
+- Can lead to biased results, reduced statistical power, and invalid conclusions.
 
 - MV are usually imputed as mean/mode imputation, k-nearest neighbors, or multiple imputation techniques.
 
@@ -243,6 +246,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_11.png")
 .pull-right[
 
 ```{r out.width="100%", fig.align='center', fig.cap='Source: https://doi.org/10.1007/s11306-011-0366-4'}
+# knitr::include_graphics("images/1-StatisticsBackground_insertimage_13.png")
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_13.png")
 ```
 ]
@@ -372,7 +376,6 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_20.png")
 ```
 
 Source: [ Centering, scaling, and transformations: improving the biological information content of metabolomics data](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-7-142/tables/1)
-]
 
 ---
 
@@ -459,7 +462,9 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_24.png")
 ]
 
 .pull-right[
-
+```{r out.width="30%", fig.align='center', fig.cap=''}
+knitr::include_graphics("images/eda_graphs.png")
+```
 ]
 
 ---
@@ -494,7 +499,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_25.png")
 
 - If the number of features is not huge, they provide useful information
 
-- Location estimates: Mean, Median, Mode, quantils
+- Location estimates: Mean, Median, Mode, quantiles
 
 - Dispersion estimates: Variance, Standard deviation, interquartile range
 
@@ -576,7 +581,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_30.png")
 
 - For this, we will go through a series of Multivariate Exploratory (Unsupervised) techniques.
 
-![Plot title. ](images/1-StatisticsBackground_insertimage_33.png)
+![illustrative example of dimension reduction.](images/1-StatisticsBackground_insertimage_33.png)
 
 ---
 
@@ -605,7 +610,7 @@ name: StatisticalTests
 
 ---
 
-#       What is a “significant change”?
+# What is a “significant change”?
 
 .pull-left[
 
@@ -864,7 +869,7 @@ class: inverse, middle, center
 
 name: multipletesting
 
-# Multipletesting
+# Multiple testing
   
 ---
 
@@ -902,7 +907,7 @@ As $m$ increases the probability of having at least one type error tends to incr
 
 # Type I error is not useful in omics
 
-![](1-StatisticsBackground-2_insertimage_13.png)
+![](images/1-StatisticsBackground-2_insertimage_13.png)
 ---
 
 # How can we deal with this issue?
@@ -999,13 +1004,13 @@ P-values at the bottom of the table
 
 </small>
 
----
+<!-- --- -->
 
-class: inverse, middle, center
+<!-- class: inverse, middle, center -->
 
-name: Resources
+<!-- name: Resources -->
   
-# References and Resources
+<!-- # References and Resources -->
 
----
+<!-- --- -->
 
