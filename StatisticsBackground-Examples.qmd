@@ -1,0 +1,56 @@
+---
+title: "Solved examples for Statistics Background talks"
+author: "Alex Sanchez"
+output:
+  html_document:
+    code_folding: show
+    toc: yes
+    toc_float: 
+      toc_collapsed: yes
+    toc_depth: 3
+    theme: cosmo
+    highlight: textmate
+    number_sections: yes
+editor: 
+  markdown: 
+    wrap: 72
+self_contained: true
+---
+
+```{r include=FALSE}
+require(knitr)
+opts_chunk$set(
+concordance=FALSE, echo=TRUE,  warning=FALSE, error=FALSE, message=FALSE)
+```
+
+# Data Exploration
+
+Start loading toy dataset
+
+```{r}
+toyDataSet <- read.csv("datasets/toyDataSet.txt", sep="", row.names = 1)
+
+```
+
+Compute mean and sd rowwise and columnwise
+
+```{r}
+rowM<- apply (toyDataSet,1,mean)
+rowSd <- apply (toyDataSet,1,sd)
+toyDataSet2 <- data.frame(toyDataSet,means=rowM, SDs = rowSd)
+colM<- apply (toyDataSet2,2,mean)
+colSd <- apply (toyDataSet2,2,sd)
+toyDataSet2 <- rbind(toyDataSet2,means=colM, SDs = colSd)
+# install.packages("xlsx")
+# WriteXLS::WriteXLS(toyDataSet, "toyDataset.xls")
+kableExtra::kable(toyDataSet)
+```
+
+- With few variables, numerical summaries are useful, but warning with small sample size!
+
+```{r}
+#install(skimr)
+library(skimr)
+skim(t(toyDataSet))
+```
+
