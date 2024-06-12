@@ -638,7 +638,7 @@ name: StatisticalTests
 
 - **Indirect comparisons**: 2 groups, 2 samples, unpaired
     - E.g. **10** individuals: 5 suffer diabetes, 5 healthy
-    - One sample fro each individual
+    - One sample for each individual
     - Typically: Two sample t-test or similar
 
 ```{r out.width="100%", fig.cap=''}
