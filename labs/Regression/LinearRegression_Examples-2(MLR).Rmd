@@ -1,0 +1,121 @@
+---
+title: "Regresión lineal. Ejemplos y ejercicios"
+author: "Alex Sánchez (et alt.)"
+date: "2/18/2021"
+output: 
+  html_document:
+    code_folding: hide
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introducción
+
+Empezamos cargando el archivo de datos "prostate.csv".
+Observes que se trata de un archivo separado por tabuladores a pesar de su nombre.
+
+```{r}
+prostate <- read.delim("prostate.csv", row.names=1)
+```
+
+## Descripción de los datos
+
+Hacer una breve descripción de las variables y explorar las relaciones que existen entre ellas.
+
+```{r}
+str(prostate)
+```
+
+```{r}
+summary(prostate)
+```
+
+## Relación entre las variables
+
+```{r}
+prostateData<- prostate[,-10]
+round(cor(prostateData), 4)
+```
+
+
+Podemos hacerlo más bonito con la libreria `corrplot` (http://www.sthda.com/english/wiki/correlation-analyses-in-r)
+
+```{r}
+library(corrplot)
+library(RColorBrewer)
+M <-cor(prostateData)
+corrplot(M, type="upper", order="hclust",
+         col=brewer.pal(n=8, name="RdYlBu"))
+```
+
+Para estudiar la linealidad de las relaciones podemos utilizar la función `pairs`.
+
+```{r}
+pairs(prostateData)
+```
+
+Las variables `svi` y `gleason` son discretas por lo que podemos omitirlas del análisis de la linealidad
+
+```{r}
+prostateContinuousDat <-dplyr::select(prostateData ,-c("svi", "gleason"))
+pairs(prostateContinuousDat)
+```
+
+
+Podemos hacerlo más bonnito con la librería `psych`
+```{r}
+library(psych)
+pairs.panels(prostateContinuousDat, 
+             method = "pearson", # correlation method
+             hist.col = "#00AFBB",
+             density = TRUE,  # show density plots
+             ellipses = TRUE # show correlation ellipses
+             )
+```
+
+
+# Modelo de regresión
+
+Vamos a construir un modelo de regresión para poder explicar el valor del PSA a partrir de las otras variables.
+
+```{r}
+fit1 <- lm(lpsa ~ age + gleason + lbph + lcavol + lcp + lweight + pgg45, data = prostate) 
+```
+
+
+## Condiciones de aplicación
+
+```{r}
+par(mfrow=c(2,2))
+plot(fit1)
+par(mfrow=c(1,1))
+```
+
+```{r}
+library(car)
+vif(fit1)
+```
+
+
+## Inferencia sobre el modelo 
+
+Analizar la significación del modelo.
+
+```{r}
+summary(fit1)
+```
+
+```{r}
+anova(fit1)
+```
+
+
+
+
+
+
+

@@ -308,21 +308,25 @@ name: Factorizations
 
 .pull-left[
 
--   Given a ***KxN data matrix*** containing ***K*** variables (probably correlated measurements) in ***N*** samples (objects/individuals...)
+-   Given a $KxN$ data matrix containing 
+  - $K$ variables (probably correlated measurements) in 
+  - $N$ samples (objects/individuals...)
 
--   PCA transforms the variables into ***K*** new components that
+-   Assuming $K < N$, PCA transforms the variables into $K$ new components that:
 
   -   Reflect the different sources of variability in the data, but
 
-  -   are not correlated, i.e., *each component represents a different source of variability,*
+  -   Are not correlated, i.e., *each component represents a different source of variability,*
 ]
 
 .pull-right[
 
-![Plot title. ](images/AMV4Omics-Xaringan_insertimage_20.png)
-
-[Source](https://towardsdatascience.com/tidying-up-with-pca-an-introduction-to-principal-components-analysis-f876599af383)
+```{r, fig.align='center', out.width='60%', fig.cap='', echo=FALSE}
+knitr::include_graphics("AMV4Omics-Overview-EN_insertimage_1.png")
+```
 ]
+<!-- [Source](https://towardsdatascience.com/tidying-up-with-pca-an-introduction-to-principal-components-analysis-f876599af383) -->
+<!-- ] -->
 
 ---
 
@@ -330,62 +334,44 @@ name: Factorizations
 
 .pull-left[
 
--   These new components are constructed in such a way that *they have decreasing explanatory power*: each component explains more than the next (less
+-   These new components are constructed in such a way that:
 
-) variability in the data.
+  - They are orthogonal (perpendicular) to each other
+  - *They have decreasing explanatory power*: each component explains more (variance) than the next one.
 
--  Practically, in most cases, a few components (two, three, etc.) are enough to summarize the majority of the information contained in the original variables.
+-  I most cases, a few components (2 or 3) suffice to summarize most of the information contained in the original variables.
 
--  The principal components are calculated by projecting the points onto a reduced number of axes, thus forming a plane or a hyperplane that minimizes the Euclidean distance between the points and their projections.
+-  That is, one can use PCA values to obtain a decent representation in *reduced dimension*.
 ]
 
 .pull-right[
-![Plot title. ](images/AMV4Omics-Xaringan_insertimage_21.png)
-
+![Plot title. ](AMV4Omics-Overview-EN_insertimage_2.png)
+This picture depicts how, after performing PCA and retining the two first components, almost no information is lost.
 ]
-
 ---
 
-#   PCA: What do we get?
+# PCA highlights latent information
+
 
 .pull-left[
 
--   The output of a PCA analysis includes
-
-  -   A summary of the variability explained by each of the principal components and a plot (scree plot) that shows how it decreases with the component number.
-
-  -   Scores: New coordinates of samples on the PC axes
-
-  -   Loadings: Coordinates of variables on the PC axes
-]
-
-.pull-right[
-![Plot title. ](images/AMV4Omics-Xaringan_insertimage_22.png)
-]
+-   It is generally assumed that PCA can be the basis to
+  - Highlight dominant latent structures in the data,
+  - As well as revealing natural groups, like genotypes or metabotypes,
+  - And alos non natural unexpected groupings, due to batch effect.
   
----
-
-# PCA in Action
-
-.pull-left[
-
--   Classical example: Iris data
-  -   First two principal components (from the four original variables) can separate three species
-
+- The image on the right shows the aspect of a PCA plot of a dataset before and after performing a batch adjustment.
 ]
 
 .pull-right[
-![Plot title. ](images/AMV4Omics-Xaringan_insertimage_23.png)
-[Link to code](https://gist.github.com/chriddyp/7c6c43682a8f57a1f999)
+
+```{r, fig.align='center', out.width='70%', fig.cap='', echo=FALSE}
+knitr::include_graphics("images/AMV4Omics-Xaringan_insertimage_21.png")
+```
 ]
 
 ---
 
-#  Dimension Reduction Example
-
-- This link [(Link to workflow)](https://bioconductor.org/packages/release/bioc/vignettes/POMA/inst/doc/POMA-demo.html) contains a complete workflow of metabolomics data using the POMA package from Bioconductor.
-
-- The second steps show aspects such as data transformation and projection using PCA.
 
 ---
 
