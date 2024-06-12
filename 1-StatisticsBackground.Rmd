@@ -82,7 +82,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_1.png")
 
 # Where we are heading
 
-```{r out.width="80%", fig.align='center', fig.cap='Making sense of the data with Statistical and Bioinformatical methods and tools'}
+```{r out.width="80%", fig.align='center', fig.cap='Making sense of the data with Statistical and Bioinformatical methods and tools.'}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_2.png")
 ```
 
@@ -110,7 +110,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_2.png")
 
 # The Omics Data Analysis Process
 
-```{r out.width="100%", fig.align='center', fig.cap='Omics technologies may differ in their data generation processes as well in the questions they aim at answering. The general steps, however, show common traits among technologies'}
+```{r out.width="90%", fig.align='center', fig.cap='Omics technologies may differ in their data generation processes as well in the questions they aim at answering. The general steps, however, show common traits among technologies.'}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_3.png")
 ```
 
@@ -118,7 +118,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_3.png")
 
 # The Statistical Analysis Process
 
-```{r out.width="90%", fig.align='center', fig.cap='Superimposed to the Omics Process there are a series of exploratory and modeling steps that, altogether, form the Statistical Analysis Process.'}
+```{r out.width="85%", fig.align='center', fig.cap='Superimposed to the Omics Process there are a series of exploratory and modeling steps that, altogether, form the Statistical Analysis Process.'}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_4.png")
 ```
 
@@ -126,7 +126,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_4.png")
 
 # The Data for the Analysis
 
-- At the end of the data generation process we end up with similar types of data such as *Peak intensities, Concentrations*, usually organize in some type of rectangular  *features* $\times$ *samples* tables.
+- At the end of the data generation process we end up with similar types of data such as *Peak intensities, Concentrations*, usually organized in some type of rectangular  *features* $\times$ *samples* tables.
 
 - These are, somehow, linked, to complementary information  (sample groups, metabolite names ...), generally kown as the study *metadata*.
 
@@ -141,10 +141,10 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_6.png")
 
 - Typically *metadata* is intended to provide information on:
   - Samples characteristics or experimental groups
-  - Variable names and other characteristics (e.g. is ametabolite *endogene* or *exogene*)
+  - Variable names and other characteristics (e.g. is a metabolite *endogene* or *exogene*)
   - Study characteristic such as the platform, technology or other data generation characteristics.
 
-```{r out.width="80%", fig.align='center', fig.cap='Metadata can be provided as separate pieces of information'}
+```{r out.width="80%", fig.align='center', fig.cap='Metadata can be provided as separate pieces of information.'}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_7.png")
 ```
 
@@ -155,7 +155,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_7.png")
 - Some software libraries like [Bioconductor](http://bioconductor.org) provide specific  structures to allow the integrated management of data and metadata.
 - This is a powerful approach, but requires some level of expertise and is far from being universally adopted.
 
-```{r out.width="60%", fig.align='center', fig.cap=''}
+```{r out.width="45%", fig.align='center', fig.cap=''}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_9.png")
 ```
 
@@ -166,7 +166,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_9.png")
 - Metadata can be combined with features values in the same file. 
 - This simplifies data management, but may have a poorer metadata
 
-```{r out.width="100%", fig.align='center', fig.cap=''}
+```{r out.width="95%", fig.align='center', fig.cap=''}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_8.png")
 ```
 
@@ -174,11 +174,11 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_8.png")
 
 # Omics data structure
 
-- As with many other OMICS, Metabol*omics* data are high throughput, 
+- As with many other OMICS, Metabol*omics* data are high throughput. 
 - This, in practice, means often having more variables than samples.
 - It also imposes some restrictions to the analysis methods that can be used on the data.
 
-```{r out.width="80%", fig.align='center', fig.cap='Traditional datasets (left) have more samples(K) than variables (N), while omics datasets (right) may have more features than samples $K>>N$'}
+```{r out.width="70%", fig.align='center', fig.cap='Traditional datasets (left) have more samples(K) than variables (N), while omics datasets (right) may have more features than samples $K>>N$'}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_5.png")
 ```
 
@@ -355,11 +355,12 @@ Source: [Adaptive Box–Cox Transformation ... for Better Statistical Analysis](
 
 .pull-right[
 
-```{r out.width="100%", fig.align='center', fig.cap=''}
+```{r out.width="90%", fig.align='center', fig.cap=''}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_19.png")
 ```
 
 Source: [ Centering, scaling, and transformations: improving the biological information content of metabolomics data](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-7-142/tables/1)
+
 ]
 
 ---
@@ -497,7 +498,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_25.png")
 
 - Dispersion estimates: Variance, Standard deviation, interquartile range
 
-- For relation between variables we can estimate the covariance between two variables qhich measures their degree of linear association.
+- For relation between variables we can estimate the covariance between two variables which measures their degree of linear association.
 - Covariance depends on the units of the variables. 
   - Use the correlation coefficent to have a unitless scale.
   - Always consider Pearson and Spearman (Ranks) coefficient.
@@ -517,7 +518,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_28.png")
 
 # Numerical summaries
   
-```{r out.width="60%", fig.align='center', fig.cap=''}
+```{r out.width="80%", fig.align='center', fig.cap=''}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_32.png")
 ```
 
@@ -540,7 +541,7 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_32.png")
 
 - They are different. They don't mean the same!
 
-```{r out.width="90%", fig.align='center', fig.cap=''}
+```{r out.width="60%", fig.align='center', fig.cap=''}
 knitr::include_graphics("images/1-StatisticsBackground_insertimage_29.png")
 ```
 
@@ -570,12 +571,12 @@ knitr::include_graphics("images/1-StatisticsBackground_insertimage_30.png")
 
 - Omics data are high dimensional
 - Because of this, it makes full sense to try to look *at all variables at once*
-- Although possible in moderate settings it is generally very difficult to extract useful information.
-- An alternative is to rely on dimension reduction methods, that retain some/most information and project it to lower dimensional spaces where this can be visualized,
+- Although possible in moderate settings, it is generally very difficult to extract useful information.
+- An alternative is to rely on dimension reduction methods, that retain some/most information and project it to lower dimensional spaces where this can be visualized.
 
-- For this we will go through a series of Multivariate Exploratory (Unsupervised) techniques.
+- For this, we will go through a series of Multivariate Exploratory (Unsupervised) techniques.
 
-![Plot title. ](1-StatisticsBackground_insertimage_33.png)
+![Plot title. ](images/1-StatisticsBackground_insertimage_33.png)
 
 ---
 
@@ -600,11 +601,11 @@ name: StatisticalTests
 -   Estimate effects/differences between groups,
 
   - either directly: $D = Y - X$ or
-  - in a log scale (using ratios): $log(X)-log(Y) [=log(X/Y)]$.
+  - in a log scale (using ratios): $log(X)-log(Y) = log(X/Y)$.
 
 ---
 
-#        What is a “significant change”?
+#       What is a “significant change”?
 
 .pull-left[
 
@@ -625,7 +626,7 @@ name: StatisticalTests
 
 .pull-right[
 
-![Plot title. ](1-StatisticsBackground-2_insertimage_1.png)
+![Plot title. ](images/1-StatisticsBackground-2_insertimage_1.png)
 ]
 
 
