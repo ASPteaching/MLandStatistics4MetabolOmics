@@ -53,10 +53,15 @@ knitr::knit_hooks$set(mysize = function(before, options, envir) {
 
 .columnwide[
   ### 1) [Introduction](#Introduction)
-  ### 5) [Unsupervised learning](#Unsupervised)
-  ### 6) [Supervised learning](#Supervised)
-  ### 7) [Summary and Conclusions](#Summary)
-  ### 8) [References and Resources](#Resources)
+  ### 2) [Unsupervised learning](#Unsupervised)
+  ### 3) [Dimension Reduction](#Factorizations)
+  ### 4) [Predictive Modeling: regression and Relatives](#PredictiveModeling)
+  ### 5) [PLS and PLS-LDA](#PLS)
+  ### 6) [Performance assessment in class prediction](#ClassPredictionProcess)
+
+  <!-- ### 6) [Supervised learning](#Supervised) -->
+  <!-- ### 7) [Summary and Conclusions](#Summary) -->
+  ### 7) [References and Resources](#Resources)
 ]
 
 ---
